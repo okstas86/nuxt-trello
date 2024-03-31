@@ -6,7 +6,7 @@
 			@drop="onDrop($event, category.id)"
 			@dragover.prevent
 			@dragenter.prevent
-			class="droppable min-w-[280px] h-fit m-5 border-none bg-[#2b2d33] flex flex-col"
+			class="droppable min-w-[280px] h-fit m-5 border-none bg-[#2b2d33] flex flex-col items-center"
 		>
 			<h4
 				@click="startEditing(category)"
@@ -45,22 +45,21 @@
 					placeholder="Ввести заголовок для этой карточки"
 					type="text"
 				/>
+				<div v-if="item.editing" class="flex ml-[-15px] w-[280px] bg-[#2b2d33]">
+					<button
+						@click="stopEditing(item)"
+						class="flex my-3 bg-[#4f4e4e] hover:bg-[#1c1d20] mx-4 px-3 py-1.5"
+					>
+						<p class="text-[#7c8085] text-sm font-normal">Добавить карточку</p>
+					</button>
+					<button @click="stopEditing(item)">
+						<img src="../assets/icons/close.svg" alt="plus" />
+					</button>
+				</div>
 			</div>
-
-			<div v-if="showBtn" class="flex ml-3">
-				<button
-					@click="stopEditing(item)"
-					class="flex my-3 bg-[#4f4e4e] hover:bg-[#1c1d20] mr-5 px-3 py-1.5"
-				>
-					<p class="text-[#7c8085] text-sm font-normal">Добавить карточку</p>
-				</button>
-				<button @click="stopEditing(item)">
-					<img src="../assets/icons/close.svg" alt="plus" />
-				</button>
-			</div>
-			<div v-else class="hover:bg-[#1c1d20]">
+			<div v-if="!showBtn" class="w-full hover:bg-[#1c1d20]">
 				<button @click="addNewItem(category.id)" class="flex w-full my-3 ml-2">
-					<img src="../assets/icons/plus.svg" alt="plus" class="ml-2" />
+					<img src="../assets/icons/plus.svg" alt="plus" class="mx-2" />
 					<p class="text-[#7c8085] text-sm font-normal">Добавить</p>
 				</button>
 			</div>
@@ -70,22 +69,25 @@
 
 <script setup>
 import { ref } from "vue"
+import { useBoardStore } from "~/stores/boardStore"
+const store = useBoardStore()
+
 const items = ref([
 	{
 		id: 0,
-		title: "Testing component",
+		title: "Technical Testing",
 		categoryId: 0,
 		editing: false,
 	},
 	{
 		id: 1,
-		title: "Deploy",
+		title: "Client Meeting",
 		categoryId: 0,
 		editing: false,
 	},
 	{
 		id: 2,
-		title: "Cat",
+		title: "Bug Fixing",
 		categoryId: 1,
 		editing: false,
 	},
@@ -146,7 +148,6 @@ function addNewItem(categoryId) {
 	items.value = [...items.value, newItem]
 	newItemTitle = ""
 }
-
 function startEditing(item) {
 	item.editing = true
 	item.editedTitle = item.title
