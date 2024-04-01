@@ -42,6 +42,7 @@
 					v-if="item.editing"
 					v-model="item.editedTitle"
 					@blur="stopEditing(item)"
+					@click="stopEditing(item)"
 					placeholder="Ввести заголовок для этой карточки"
 					type="text"
 				/>
@@ -149,6 +150,7 @@ function addNewItem(categoryId) {
 	newItemTitle = ""
 }
 function startEditing(item) {
+	showBtn.value = true
 	item.editing = true
 	item.editedTitle = item.title
 }
