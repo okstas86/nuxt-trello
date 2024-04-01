@@ -42,7 +42,7 @@
 					v-if="item.editing"
 					v-model="item.editedTitle"
 					@blur="stopEditing(item)"
-					@click="stopEditing(item)"
+					@keydown.enter="stopEditing(item)"
 					placeholder="Ввести заголовок для этой карточки"
 					type="text"
 				/>
@@ -120,6 +120,7 @@ const categories = ref([
 	},
 ])
 
+let activeEditingItemId = null
 let newItemTitle = ""
 const showBtn = ref(false)
 
@@ -150,6 +151,13 @@ function addNewItem(categoryId) {
 	newItemTitle = ""
 }
 function startEditing(item) {
+	if (activeEditingItemId !== null) {
+		const activeItem = items.value.find(i => i.id === activeEditingItemId)
+		if (activeItem) {
+			activeItem.editing = false
+		}
+	}
+	activeEditingItemId = item.id
 	showBtn.value = true
 	item.editing = true
 	item.editedTitle = item.title
